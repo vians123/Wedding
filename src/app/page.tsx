@@ -212,7 +212,7 @@ export default function Home() {
                 </span>
               </div>
               <p className="mt-3 text-sm leading-7 text-ink-50">
-                4:30 PM • Courtyard Garden
+                9:00 AM
               </p>
               <p className="mt-3 text-sm leading-7 text-ink-50">
                 Our Lady of Assumption Dauis Church
@@ -242,7 +242,7 @@ export default function Home() {
                 </span>
               </div>
               <p className="mt-3 text-sm leading-7 text-ink-50">
-                6:00 PM • Dinner &amp; Dancing
+                11:00 AM – 12:00 NN
               </p>
               <p className="mt-3 text-sm leading-7 text-ink-50">
                 Bohol Tropics Resort
@@ -353,13 +353,6 @@ export default function Home() {
                 title="Save us a seat"
                 subtitle="Please respond by June 29, 2026. With love, thank you for celebrating with us."
               />
-              <div className="mt-8 overflow-hidden rounded-2xl border border-black/10 bg-white/60 p-6 shadow-soft backdrop-blur">
-                <h3 className="font-display text-2xl tracking-tight">Note</h3>
-                <p className="mt-3 text-sm leading-7 text-ink-50">
-                  Dress code is semi-formal. Ceremony is outdoors — consider a
-                  light layer for the evening breeze.
-                </p>
-              </div>
             </Reveal>
 
             <Reveal delay={0.06} className="glass rounded-2xl p-6 shadow-soft">
