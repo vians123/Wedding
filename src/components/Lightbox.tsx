@@ -53,13 +53,13 @@ export function Lightbox({
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.28, ease: [0.21, 0.47, 0.32, 0.98] }}
           >
-            <div className="relative aspect-[16/10] w-full">
+            <div className="relative h-[80vh] w-full">
               <Image
                 src={src}
                 alt={alt}
                 fill
                 sizes="(max-width: 768px) 95vw, 900px"
-                className="object-cover"
+                className="object-contain p-2"
                 priority
               />
             </div>

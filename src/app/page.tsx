@@ -57,38 +57,23 @@ export default function Home() {
       {/* Hero */}
       <section id="top" className="relative min-h-[92svh] overflow-hidden">
         <div className="absolute inset-0">
-          <motion.div
-            className="absolute inset-0 will-change-transform"
-            initial={{ scale: 1.06 }}
-            animate={{ scale: 1.14 }}
-            transition={{ duration: 22, ease: "easeOut" }}
-          >
-            <Image
-              src="/invites/first.jpeg"
-              alt="Soft florals background"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-ivory-50/95" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,246,248,0.50),transparent_55%),radial-gradient(circle_at_80%_10%,rgba(251,236,200,0.25),transparent_55%)]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ivory-100 via-ivory-50 to-beige-50" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,246,248,0.75),transparent_45%),radial-gradient(circle_at_85%_15%,rgba(251,236,200,0.45),transparent_50%)]" />
         </div>
 
         <Container className="relative">
           <nav className="flex items-center justify-between py-6 text-sm">
-            <a href="#top" className="font-medium tracking-wide text-ivory-50">
+            <a href="#top" className="font-medium tracking-wide text-ink-200">
               J &amp; A
             </a>
-            <div className="hidden items-center gap-6 text-ivory-50/90 sm:flex">
-              <a className="hover:text-ivory-50" href="#details">
+            <div className="hidden items-center gap-6 text-ink-100 sm:flex">
+              <a className="hover:text-ink-200" href="#details">
                 Details
               </a>
-              <a className="hover:text-ivory-50" href="#gallery">
+              <a className="hover:text-ink-200" href="#gallery">
                 Photos
               </a>
-              <a className="hover:text-ivory-50" href="#rsvp">
+              <a className="hover:text-ink-200" href="#rsvp">
                 RSVP
               </a>
             </div>
@@ -100,7 +85,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease: [0.21, 0.47, 0.32, 0.98] }}
-                className="text-[11px] tracking-[0.28em] uppercase text-ivory-50/90"
+                className="text-[11px] tracking-[0.28em] uppercase text-ink-100"
               >
                 Wedding Invitation
               </motion.p>
@@ -113,7 +98,7 @@ export default function Home() {
                   ease: [0.21, 0.47, 0.32, 0.98],
                   delay: 0.1,
                 }}
-                className="mt-6 font-display text-6xl tracking-[-0.02em] text-ivory-50 drop-shadow sm:text-7xl lg:text-8xl"
+                className="mt-6 font-display text-6xl tracking-[-0.02em] text-ink-300 sm:text-7xl lg:text-8xl"
               >
                 James Rhyll <span className="text-gold-200">&amp;</span> Algen Mary
               </motion.h1>
@@ -126,7 +111,7 @@ export default function Home() {
                   ease: [0.21, 0.47, 0.32, 0.98],
                   delay: 0.28,
                 }}
-                className="mt-6 text-base leading-7 text-ivory-50/90 sm:text-lg"
+                className="mt-6 text-base leading-7 text-ink-100 sm:text-lg"
               >
                 Monday, June 29, 2026 • Dauis, Bohol
               </motion.p>
@@ -143,13 +128,13 @@ export default function Home() {
               >
                 <a
                   href="#rsvp"
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-ivory-50/95 px-7 font-medium text-ink-300 shadow-soft backdrop-blur transition hover:bg-white"
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-ink-300 px-7 font-medium text-ivory-50 shadow-soft transition hover:bg-ink-200"
                 >
                   RSVP
                 </a>
                 <a
                   href="#details"
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-white/25 bg-black/20 px-7 font-medium text-ivory-50 shadow-ring backdrop-blur transition hover:bg-black/30"
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-black/10 bg-white/70 px-7 font-medium text-ink-200 shadow-ring backdrop-blur transition hover:bg-white/85"
                 >
                   View details
                 </a>
@@ -161,13 +146,13 @@ export default function Home() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.9, delay: 0.85 }}
-                className="mt-14 inline-flex flex-col items-center gap-2 text-xs tracking-[0.22em] uppercase text-ivory-50/80"
+                className="mt-14 inline-flex flex-col items-center gap-2 text-xs tracking-[0.22em] uppercase text-ink-100"
               >
                 <span>Scroll</span>
                 <motion.span
                   animate={{ y: [0, 8, 0] }}
                   transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                  className="grid h-9 w-9 place-items-center rounded-full border border-white/25 bg-black/20 backdrop-blur"
+                  className="grid h-9 w-9 place-items-center rounded-full border border-black/10 bg-white/70 backdrop-blur"
                 >
                   <span className="text-base leading-none">↓</span>
                 </motion.span>
@@ -177,7 +162,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, delay: 0.95 }}
-                className="mx-auto mt-10 w-full max-w-3xl rounded-2xl border border-white/20 bg-[#D8EBCF]/85 px-5 py-6 text-ink-200 shadow-soft backdrop-blur"
+                className="mx-auto mt-10 w-full max-w-3xl rounded-2xl border border-gold-100 bg-beige-50/90 px-5 py-6 text-ink-200 shadow-soft backdrop-blur"
               >
                 <p className="text-center font-display text-4xl tracking-tight">
                   June 29, 2026
@@ -190,10 +175,10 @@ export default function Home() {
                     { label: "Second(s)", value: countdown.seconds },
                   ].map((item) => (
                     <div key={item.label}>
-                      <p className="font-display text-4xl leading-none text-ink-200 sm:text-5xl">
+                      <p className="font-display text-4xl leading-none text-gold-400 sm:text-5xl">
                         {String(item.value).padStart(2, "0")}
                       </p>
-                      <p className="mt-2 text-xs tracking-wide text-ink-100">
+                      <p className="mt-2 text-xs tracking-wide text-ink-50">
                         {item.label}
                       </p>
                     </div>
@@ -231,9 +216,9 @@ export default function Home() {
                 4:30 PM • Courtyard Garden
               </p>
               <p className="mt-3 text-sm leading-7 text-ink-50">
-                Rosewood Estate
+                Our Lady of Assumption Dauis Church
                 <br />
-                123 Coastal Way, Santa Barbara
+                Dauis, Bohol
               </p>
               <div className="mt-5">
                 <a
@@ -261,9 +246,9 @@ export default function Home() {
                 6:00 PM • Dinner &amp; Dancing
               </p>
               <p className="mt-3 text-sm leading-7 text-ink-50">
-                The Conservatory Hall
+                Bohol Tropics Resort
                 <br />
-                (same venue)
+                Tagbilaran City, Bohol
               </p>
               <div className="mt-5">
                 <a
@@ -314,12 +299,12 @@ export default function Home() {
             />
           </Reveal>
 
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {photos.map((src, idx) => (
               <Reveal
                 key={`${src}-${idx}`}
                 delay={idx * 0.03}
-                className="group relative overflow-hidden rounded-2xl shadow-ring"
+                className="group relative overflow-hidden rounded-2xl border border-black/10 bg-white/70 shadow-ring"
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/10 opacity-0 transition group-hover:opacity-100" />
                 <button
@@ -328,14 +313,16 @@ export default function Home() {
                   className="block h-full w-full focus:outline-none"
                   aria-label="Open photo"
                 >
-                  <Image
-                    src={src}
-                    alt="Gallery photo"
-                    width={1200}
-                    height={1200}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
-                  />
+                  <div className="relative h-[560px] w-full bg-white/40 p-2 sm:h-[620px]">
+                    <Image
+                      src={src}
+                      alt="Gallery photo"
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-contain p-2 transition duration-500 group-hover:scale-[1.02]"
+                    />
+                  </div>
                 </button>
               </Reveal>
             ))}
