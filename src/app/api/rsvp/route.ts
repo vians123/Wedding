@@ -163,9 +163,19 @@ export async function POST(req: Request) {
     message: message.trim(),
   };
 
-  console.log("[RSVP] Forwarding to Google Form", payloadOut);
-  console.log("[RSVP] formAction:", formAction);
-  console.log("[RSVP] formBody:", formBody.toString());
+  console.log("[RSVP FIELD MAP]", {
+    formAction,
+    fieldName,
+    fieldEmail,
+    fieldAttendance,
+    fieldGuestName,
+    fieldGuestContact,
+    fieldGuestRole,
+    fieldExcitement,
+    fieldMessage,
+  });
+  console.log("[RSVP PAYLOAD]", payloadOut);
+  console.log("[RSVP FORM BODY]", formBody.toString());
   try {
     const res = await fetch(formAction, {
       method: "POST",
@@ -178,8 +188,19 @@ export async function POST(req: Request) {
     });
 
     const text = await res.text().catch(() => "");
-    console.log("[RSVP] Google response status:", res.status);
-    console.log("[RSVP] Google response body:", text);
+    console.log("[GOOGLE RESPONSE STATUS]", res.status);
+    console.log("[GOOGLE RESPONSE BODY]", text);
+    if (res.status === 400) {
+      return Response.json(
+        {
+          ok: false,
+          error: "Google Form rejected submission",
+          status: res.status,
+          response: text,
+        },
+        { status: 500 },
+      );
+    }
     if (!res.ok && res.status !== 302) {
       console.warn("[RSVP] Google Form error", res.status, text);
       return serverError(
