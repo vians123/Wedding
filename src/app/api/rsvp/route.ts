@@ -152,11 +152,15 @@ export async function POST(req: Request) {
     const text = await res.text().catch(() => "");
     if (!res.ok && res.status !== 302) {
       console.warn("[RSVP] Google Form error", res.status, text);
-      return serverError("Failed to save RSVP.");
+      return serverError(
+        `Google Form rejected the submission (status ${res.status}). Please verify form entry IDs and required fields.`,
+      );
     }
   } catch (err) {
     console.warn("[RSVP] Google Form request failed", err);
-    return serverError("Failed to save RSVP.");
+    return serverError(
+      "Failed to contact Google Form. Please check Google Form URL and field IDs in Vercel env vars.",
+    );
   }
 
   return Response.json({ ok: true });
