@@ -142,11 +142,9 @@ export async function POST(req: Request) {
   const formBody = new URLSearchParams({
     [fieldName]: name.trim(),
     [fieldEmail]: email.trim(),
-    [fieldAttendance]: attendanceLabel,
     [fieldGuestName]: guestName.trim(),
     [fieldGuestContact]: guestContact.trim(),
     [fieldGuestRole]: guestRole.trim(),
-    [fieldExcitement]: excitement,
   });
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
