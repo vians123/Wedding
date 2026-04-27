@@ -199,7 +199,7 @@ export default function Home() {
             <SectionHeading
               eyebrow="Event details"
               title="A day to savor"
-              subtitle="We’d love for you to join us for a ceremony at sunset, followed by dinner and dancing."
+              subtitle="Join us as we say ‘I do’ in a beautiful morning ceremony."
             />
           </Reveal>
 
