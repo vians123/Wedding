@@ -39,19 +39,6 @@ export function RsvpForm() {
     | { type: "error"; message: string }
   >({ type: "idle" });
 
-  const googleFormAction = process.env.NEXT_PUBLIC_GOOGLE_FORM_ACTION_URL ?? "";
-  const fieldName = process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_NAME ?? "";
-  const fieldEmail = process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_EMAIL ?? "";
-  const fieldAttendance =
-    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_ATTENDANCE ?? "";
-  const fieldGuestName = process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_NAME ?? "";
-  const fieldGuestContact =
-    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_CONTACT ?? "";
-  const fieldGuestRole = process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_ROLE ?? "";
-  const fieldExcitement =
-    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_EXCITEMENT ?? "";
-  const fieldMessage = process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_MESSAGE ?? "";
-
   const canGoNext = useMemo(() => {
     if (step === 1) return state.name.trim().length > 0;
     if (step === 2) {
@@ -88,44 +75,28 @@ export function RsvpForm() {
 
     setStatus({ type: "submitting" });
     try {
-      if (
-        !googleFormAction ||
-        !fieldName ||
-        !fieldEmail ||
-        !fieldAttendance ||
-        !fieldGuestName ||
-        !fieldGuestContact ||
-        !fieldGuestRole ||
-        !fieldExcitement
-      ) {
-        throw new Error(
-          "Missing Google Form configuration. Set NEXT_PUBLIC_GOOGLE_FORM_ACTION_URL and the field entry IDs.",
-        );
-      }
-
-      const attendanceLabel = ATTENDANCE_LABELS[state.attendance];
-
-      const body = new URLSearchParams({
-        [fieldName]: state.name.trim(),
-        [fieldEmail]: state.email.trim(),
-        [fieldAttendance]: attendanceLabel,
-        [fieldGuestName]: state.guestName.trim(),
-        [fieldGuestContact]: state.guestContact.trim(),
-        [fieldGuestRole]: state.guestRole,
-        [fieldExcitement]: state.excitement,
-      });
-
-      if (fieldMessage) body.set(fieldMessage, state.message.trim());
-
-      // Google Forms requires `no-cors` from the browser; you won't receive a readable response.
-      await fetch(googleFormAction, {
+      const res = await fetch("/api/rsvp", {
         method: "POST",
-        mode: "no-cors",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "content-type": "application/json",
         },
-        body,
+        body: JSON.stringify({
+          name: state.name.trim(),
+          email: state.email.trim(),
+          attendance: state.attendance,
+          guestName: state.guestName.trim(),
+          guestContact: state.guestContact.trim(),
+          guestRole: state.guestRole,
+          excitement: state.excitement,
+          message: state.message.trim(),
+        }),
       });
+      const json = (await res.json().catch(() => null)) as
+        | { ok?: boolean; error?: string }
+        | null;
+      if (!res.ok || !json?.ok) {
+        throw new Error(json?.error ?? "Failed to save RSVP.");
+      }
 
       setStatus({ type: "success" });
       setState({

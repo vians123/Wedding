@@ -2,8 +2,12 @@ export const runtime = "nodejs";
 
 type RsvpPayload = {
   name?: unknown;
+  email?: unknown;
   attendance?: unknown;
-  guests?: unknown;
+  guestName?: unknown;
+  guestContact?: unknown;
+  guestRole?: unknown;
+  excitement?: unknown;
   message?: unknown;
 };
 
@@ -30,55 +34,128 @@ export async function POST(req: Request) {
   const payload: RsvpPayload = isRecord(body) ? (body as RsvpPayload) : {};
 
   const name = typeof payload.name === "string" ? payload.name : "";
+  const email = typeof payload.email === "string" ? payload.email : "";
   const attendance =
-    payload.attendance === "yes" || payload.attendance === "no"
+    payload.attendance === "yes" ||
+    payload.attendance === "no" ||
+    payload.attendance === "maybe"
       ? payload.attendance
       : null;
-  const guestsRaw = payload.guests;
-  const guests =
-    typeof guestsRaw === "number"
-      ? guestsRaw
-      : typeof guestsRaw === "string"
-        ? Number.parseInt(guestsRaw, 10)
-        : NaN;
-  const message =
-    typeof payload.message === "string" ? payload.message : undefined;
+  const guestName =
+    typeof payload.guestName === "string" ? payload.guestName : "";
+  const guestContact =
+    typeof payload.guestContact === "string" ? payload.guestContact : "";
+  const guestRole = typeof payload.guestRole === "string" ? payload.guestRole : "";
+  const excitement =
+    payload.excitement === "1" ||
+    payload.excitement === "2" ||
+    payload.excitement === "3" ||
+    payload.excitement === "4" ||
+    payload.excitement === "5"
+      ? payload.excitement
+      : null;
+  const message = typeof payload.message === "string" ? payload.message : "";
 
   if (!name.trim()) return badRequest("Name is required.");
+  if (!email.trim()) return badRequest("Email is required.");
   if (!attendance) return badRequest("Attendance is required.");
-  if (!Number.isFinite(guests) || guests < 0 || guests > 10) {
-    return badRequest("Guests must be between 0 and 10.");
+  if (!guestName.trim()) return badRequest("Guest name is required.");
+  if (!guestContact.trim()) return badRequest("Guest contact is required.");
+  if (!guestRole.trim()) return badRequest("Guest role is required.");
+  if (!excitement) return badRequest("Excitement level is required.");
+
+  const formAction =
+    process.env.GOOGLE_FORM_ACTION_URL ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_ACTION_URL;
+
+  const fieldName =
+    process.env.GOOGLE_FORM_FIELD_NAME ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_NAME;
+  const fieldEmail =
+    process.env.GOOGLE_FORM_FIELD_EMAIL ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_EMAIL;
+  const fieldAttendance =
+    process.env.GOOGLE_FORM_FIELD_ATTENDANCE ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_ATTENDANCE;
+  const fieldGuestName =
+    process.env.GOOGLE_FORM_FIELD_GUEST_NAME ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_NAME;
+  const fieldGuestContact =
+    process.env.GOOGLE_FORM_FIELD_GUEST_CONTACT ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_CONTACT;
+  const fieldGuestRole =
+    process.env.GOOGLE_FORM_FIELD_GUEST_ROLE ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_GUEST_ROLE;
+  const fieldExcitement =
+    process.env.GOOGLE_FORM_FIELD_EXCITEMENT ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_EXCITEMENT;
+  const fieldMessage =
+    process.env.GOOGLE_FORM_FIELD_MESSAGE ??
+    process.env.NEXT_PUBLIC_GOOGLE_FORM_FIELD_MESSAGE;
+
+  if (
+    !formAction ||
+    !fieldName ||
+    !fieldEmail ||
+    !fieldAttendance ||
+    !fieldGuestName ||
+    !fieldGuestContact ||
+    !fieldGuestRole ||
+    !fieldExcitement
+  ) {
+    return serverError("Server is missing Google Form configuration.");
   }
 
-  const appsScriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
-  if (!appsScriptUrl) {
-    return serverError("Server is missing GOOGLE_APPS_SCRIPT_URL.");
+  const attendanceLabel =
+    attendance === "yes"
+      ? "Yes, I/We will be delighted to attend."
+      : attendance === "no"
+        ? "No, I/We will unfortunately be unable to attend."
+        : "Maybe, I still need to fix my schedule. I will let you know soon";
+
+  const formBody = new URLSearchParams({
+    [fieldName]: name.trim(),
+    [fieldEmail]: email.trim(),
+    [fieldAttendance]: attendanceLabel,
+    [fieldGuestName]: guestName.trim(),
+    [fieldGuestContact]: guestContact.trim(),
+    [fieldGuestRole]: guestRole.trim(),
+    [fieldExcitement]: excitement,
+  });
+  if (fieldMessage) {
+    formBody.set(fieldMessage, message.trim());
   }
 
   const payloadOut = {
     name: name.trim(),
-    attendance,
-    guests,
-    message: message?.trim() ? message.trim() : "",
+    email: email.trim(),
+    attendance: attendanceLabel,
+    guestName: guestName.trim(),
+    guestContact: guestContact.trim(),
+    guestRole: guestRole.trim(),
+    excitement,
+    message: message.trim(),
   };
 
-  console.log("[RSVP] Forwarding to Apps Script", payloadOut);
+  console.log("[RSVP] Forwarding to Google Form", payloadOut);
   try {
-    const res = await fetch(appsScriptUrl, {
+    const res = await fetch(formAction, {
       method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payloadOut),
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: formBody,
       cache: "no-store",
+      redirect: "manual",
     });
 
     const text = await res.text().catch(() => "");
-    if (!res.ok) {
-      console.warn("[RSVP] Apps Script error", res.status, text);
+    if (!res.ok && res.status !== 302) {
+      console.warn("[RSVP] Google Form error", res.status, text);
       return serverError("Failed to save RSVP.");
     }
-  }
-  catch (err) {
-    console.warn("[RSVP] Apps Script request failed", err);
+  } catch (err) {
+    console.warn("[RSVP] Google Form request failed", err);
     return serverError("Failed to save RSVP.");
   }
 
