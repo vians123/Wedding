@@ -141,8 +141,12 @@ export async function POST(req: Request) {
 
   const formBody = new URLSearchParams({
     [fieldName]: name.trim(),
+    [fieldEmail]: email.trim(),
+    [fieldAttendance]: attendanceLabel,
     [fieldGuestName]: guestName.trim(),
     [fieldGuestContact]: guestContact.trim().replace(/[^0-9]/g, ""),
+    [fieldGuestRole]: guestRole.trim(),
+    [fieldExcitement]: excitement,
   });
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
@@ -169,6 +173,11 @@ export async function POST(req: Request) {
     fieldGuestRole,
     fieldExcitement,
     fieldMessage,
+  });
+  console.log("[GOOGLE VALUES]", {
+    attendanceLabel,
+    guestRole: guestRole.trim(),
+    excitement,
   });
   console.log("[RSVP PAYLOAD]", payloadOut);
   console.log("[RSVP FORM BODY]", formBody.toString());
