@@ -148,6 +148,8 @@ export async function POST(req: Request) {
     [fieldGuestRole]: guestRole.trim(),
     [fieldExcitement]: excitement,
   });
+  // Required by Google Forms when "Collect email addresses" is enabled.
+  formBody.set("emailAddress", email.trim());
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
   }

@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Container } from "@/components/Container";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
-import { RsvpForm } from "@/components/RsvpForm";
 import { Lightbox } from "@/components/Lightbox";
 
 export default function Home() {
@@ -367,7 +366,16 @@ export default function Home() {
               <p className="text-[11px] tracking-[0.22em] uppercase text-ink-50">
                 RSVP form
               </p>
-              <RsvpForm />
+              <div className="mt-6 overflow-hidden rounded-2xl border border-black/10 bg-white/70 shadow-ring">
+                <iframe
+                  title="Wedding RSVP Form"
+                  src="https://docs.google.com/forms/d/e/1FAIpQLSebpj82v8Y42trvpyTwI4TlUM4zc-TJpQxQcWN_7Ltu2LToqg/viewform?embedded=true"
+                  className="h-[1200px] w-full bg-white"
+                  loading="lazy"
+                >
+                  Loading RSVP form...
+                </iframe>
+              </div>
             </Reveal>
           </div>
         </Container>
