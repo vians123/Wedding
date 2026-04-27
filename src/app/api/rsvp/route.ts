@@ -122,6 +122,9 @@ export async function POST(req: Request) {
     [fieldGuestRole]: guestRole.trim(),
     [fieldExcitement]: excitement,
   });
+  // When Google Forms "Collect email addresses" is enabled,
+  // this field is often required in addition to any custom email question.
+  formBody.set("emailAddress", email.trim());
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
   }
