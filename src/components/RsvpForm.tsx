@@ -6,13 +6,19 @@ import { useMemo, useState } from "react";
 type FormState = {
   name: string;
   email: string;
-  attendance: "yes" | "no";
+  attendance: "yes" | "no" | "maybe";
   guestName: string;
   guestContact: string;
   guestRole: string;
   excitement: "1" | "2" | "3" | "4" | "5";
   message: string;
 };
+
+const ATTENDANCE_LABELS = {
+  yes: "Yes, I/We will be delighted to attend.",
+  no: "No, I/We will unfortunately be unable to attend.",
+  maybe: "Maybe, I still need to fix my schedule. I will let you know soon",
+} as const;
 
 export function RsvpForm() {
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
@@ -50,9 +56,7 @@ export function RsvpForm() {
     if (step === 1) return state.name.trim().length > 0;
     if (step === 2) {
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email.trim());
-      return (
-        emailOk && (state.attendance === "yes" || state.attendance === "no")
-      );
+      return emailOk && state.attendance in ATTENDANCE_LABELS;
     }
     if (step === 3) {
       return (
@@ -99,7 +103,7 @@ export function RsvpForm() {
         );
       }
 
-      const attendanceLabel = state.attendance === "yes" ? "Yes" : "No";
+      const attendanceLabel = ATTENDANCE_LABELS[state.attendance];
 
       const body = new URLSearchParams({
         [fieldName]: state.name.trim(),
@@ -124,7 +128,6 @@ export function RsvpForm() {
       });
 
       setStatus({ type: "success" });
-      setStep(1);
       setState({
         name: "",
         email: "",
@@ -141,6 +144,40 @@ export function RsvpForm() {
         message: err instanceof Error ? err.message : "Something went wrong.",
       });
     }
+  }
+
+  if (status.type === "success") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.21, 0.47, 0.32, 0.98] }}
+        className="mt-8 grid gap-5 rounded-2xl border border-black/10 bg-white/70 p-6 text-center shadow-soft backdrop-blur"
+      >
+        <p className="text-[11px] tracking-[0.24em] uppercase text-ink-50">
+          RSVP received
+        </p>
+        <p className="font-display text-3xl tracking-tight text-ink-300">
+          Thank you for your RSVP <span aria-hidden>💖</span>
+        </p>
+        <p className="text-sm leading-7 text-ink-50">
+          If you don’t see an email confirmation, it’s because Google Forms only
+          sends receipts when it’s enabled in the Form settings.
+        </p>
+        <div className="mt-1 flex justify-center">
+          <button
+            type="button"
+            onClick={() => {
+              setStatus({ type: "idle" });
+              setStep(1);
+            }}
+            className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-ink-300 px-7 font-medium text-ivory-50 shadow-soft transition hover:bg-ink-200"
+          >
+            Send another response
+          </button>
+        </div>
+      </motion.div>
+    );
   }
 
   return (
@@ -211,13 +248,23 @@ export function RsvpForm() {
                 onChange={(e) =>
                   setState((s) => ({
                     ...s,
-                    attendance: e.target.value === "no" ? "no" : "yes",
+                    attendance:
+                      e.target.value === "no"
+                        ? "no"
+                        : e.target.value === "maybe"
+                          ? "maybe"
+                          : "yes",
                   }))
                 }
                 className="min-h-[48px] rounded-xl border border-black/10 bg-white/80 px-4 text-ink-300 shadow-ring outline-none transition focus:border-gold-300 focus:ring-2 focus:ring-gold-100"
               >
-                <option value="yes">Yes, I’ll be there</option>
-                <option value="no">No, I can’t make it</option>
+                <option value="yes">Yes, I/We will be delighted to attend.</option>
+                <option value="no">
+                  No, I/We will unfortunately be unable to attend.
+                </option>
+                <option value="maybe">
+                  Maybe, I still need to fix my schedule. I will let you know soon
+                </option>
               </select>
             </div>
           </motion.div>

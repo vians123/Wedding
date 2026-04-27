@@ -17,13 +17,13 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://your-domain.com"),
   title: {
-    default: "Avery & Jordan — Wedding Invitation",
-    template: "%s — Avery & Jordan",
+    default: "James Rhyll & Algen Mary — Wedding Invitation",
+    template: "%s — James Rhyll & Algen Mary",
   },
   description:
     "Join us for our wedding celebration. Find the details, explore photos, and RSVP.",
   openGraph: {
-    title: "Avery & Jordan — Wedding Invitation",
+    title: "James Rhyll & Algen Mary — Wedding Invitation",
     description:
       "Join us for our wedding celebration. Find the details, explore photos, and RSVP.",
     type: "website",

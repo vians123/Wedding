@@ -2,14 +2,45 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Container } from "@/components/Container";
-import { Reveal, revealItemVariants } from "@/components/Reveal";
+import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { RsvpForm } from "@/components/RsvpForm";
 import { Lightbox } from "@/components/Lightbox";
 
 export default function Home() {
+  const weddingDate = useMemo(() => new Date("2026-06-29T09:00:00+08:00"), []);
+  const [countdown, setCountdown] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date().getTime();
+      const diff = weddingDate.getTime() - now;
+
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      setCountdown({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      });
+    };
+
+    tick();
+    const interval = window.setInterval(tick, 1000);
+    return () => window.clearInterval(interval);
+  }, [weddingDate]);
+
   const photos = useMemo(
     () => [
       "/invites/first.jpeg",
@@ -48,12 +79,9 @@ export default function Home() {
         <Container className="relative">
           <nav className="flex items-center justify-between py-6 text-sm">
             <a href="#top" className="font-medium tracking-wide text-ivory-50">
-              A &amp; J
+              J &amp; A
             </a>
             <div className="hidden items-center gap-6 text-ivory-50/90 sm:flex">
-              <a className="hover:text-ivory-50" href="#story">
-                Our Story
-              </a>
               <a className="hover:text-ivory-50" href="#details">
                 Details
               </a>
@@ -87,7 +115,7 @@ export default function Home() {
                 }}
                 className="mt-6 font-display text-6xl tracking-[-0.02em] text-ivory-50 drop-shadow sm:text-7xl lg:text-8xl"
               >
-                Avery <span className="text-gold-200">&amp;</span> Jordan
+                James Rhyll <span className="text-gold-200">&amp;</span> Algen Mary
               </motion.h1>
 
               <motion.p
@@ -100,7 +128,7 @@ export default function Home() {
                 }}
                 className="mt-6 text-base leading-7 text-ivory-50/90 sm:text-lg"
               >
-                Saturday, September 19, 2026 • Santa Barbara, California
+                Monday, June 29, 2026 • Dauis, Bohol
               </motion.p>
 
               <motion.div
@@ -128,7 +156,7 @@ export default function Home() {
               </motion.div>
 
               <motion.a
-                href="#story"
+                href="#details"
                 aria-label="Scroll down"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -144,106 +172,35 @@ export default function Home() {
                   <span className="text-base leading-none">↓</span>
                 </motion.span>
               </motion.a>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.95 }}
+                className="mx-auto mt-10 w-full max-w-3xl rounded-2xl border border-white/20 bg-[#D8EBCF]/85 px-5 py-6 text-ink-200 shadow-soft backdrop-blur"
+              >
+                <p className="text-center font-display text-4xl tracking-tight">
+                  June 29, 2026
+                </p>
+                <div className="mt-4 grid grid-cols-4 gap-3 text-center sm:gap-5">
+                  {[
+                    { label: "Day(s)", value: countdown.days },
+                    { label: "Hour(s)", value: countdown.hours },
+                    { label: "Minute(s)", value: countdown.minutes },
+                    { label: "Second(s)", value: countdown.seconds },
+                  ].map((item) => (
+                    <div key={item.label}>
+                      <p className="font-display text-4xl leading-none text-ink-200 sm:text-5xl">
+                        {String(item.value).padStart(2, "0")}
+                      </p>
+                      <p className="mt-2 text-xs tracking-wide text-ink-100">
+                        {item.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
             </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Story */}
-      <section id="story" className="relative py-24 sm:py-32">
-        <Container>
-          <Reveal>
-            <SectionHeading
-              eyebrow="Our story"
-              title="A quiet hello, a timeless yes."
-              subtitle="A few moments that brought us here — the kind you carry in your pocket forever."
-            />
-          </Reveal>
-
-          <div className="relative mt-14">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-gradient-to-b from-black/0 via-black/10 to-black/0 lg:block"
-            />
-
-            <Reveal mode="stagger">
-              <div className="grid gap-10">
-                {[
-                  {
-                    year: "2018",
-                    title: "We met",
-                    body: "A rainy afternoon, a borrowed umbrella, and a conversation that never really ended.",
-                  },
-                  {
-                    year: "2021",
-                    title: "We moved in",
-                    body: "Sunday coffee, shared playlists, and a home that felt like a promise.",
-                  },
-                  {
-                    year: "2025",
-                    title: "We got engaged",
-                    body: "Golden hour, happy tears, and the easiest question we’ve ever answered.",
-                  },
-                ].map((item, idx) => {
-                  const isLeft = idx % 2 === 0;
-                  return (
-                    <motion.div
-                      key={item.year}
-                      variants={{
-                        hidden: {
-                          opacity: 0,
-                          y: 28,
-                          x: 0,
-                        },
-                        visible: {
-                          opacity: 1,
-                          y: 0,
-                          x: 0,
-                          transition: { duration: 0.9, ease: [0.21, 0.47, 0.32, 0.98] },
-                        },
-                      }}
-                      className="relative grid items-start gap-6 lg:grid-cols-2"
-                    >
-                      <div className={isLeft ? "lg:pr-12" : "lg:col-start-2 lg:pl-12"}>
-                        <motion.div
-                          variants={{
-                            hidden: { ...revealItemVariants.hidden, x: isLeft ? -24 : 24 },
-                            visible: {
-                              ...revealItemVariants.visible,
-                              x: 0,
-                              transition: {
-                                duration: 0.9,
-                                ease: [0.21, 0.47, 0.32, 0.98],
-                              },
-                            },
-                          }}
-                          className="glass rounded-2xl p-6 shadow-ring transition will-change-transform hover:-translate-y-0.5 hover:shadow-soft"
-                        >
-                          <p className="text-[11px] tracking-[0.24em] uppercase text-ink-50">
-                            {item.year}
-                          </p>
-                          <h3 className="mt-2 font-display text-2xl tracking-tight">
-                            {item.title}
-                          </h3>
-                          <p className="mt-3 text-sm leading-7 text-ink-50">
-                            {item.body}
-                          </p>
-                        </motion.div>
-                      </div>
-
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute left-1/2 top-7 hidden -translate-x-1/2 lg:block"
-                      >
-                        <div className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/70 shadow-ring backdrop-blur">
-                          <div className="h-2.5 w-2.5 rounded-full bg-gold-300" />
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </Reveal>
           </div>
         </Container>
       </section>
@@ -280,12 +237,12 @@ export default function Home() {
               </p>
               <div className="mt-5">
                 <a
-                  href="https://www.google.com/maps"
+                  href="https://maps.app.goo.gl/ZzanPpd7UG44Q7uz9"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-black/10 bg-white/70 px-5 text-sm font-medium text-ink-200 shadow-ring backdrop-blur transition hover:bg-white/85"
                 >
-                  View in Google Maps
+                  View Wedding Map
                 </a>
               </div>
             </Reveal>
@@ -308,6 +265,16 @@ export default function Home() {
                 <br />
                 (same venue)
               </p>
+              <div className="mt-5">
+                <a
+                  href="https://maps.app.goo.gl/FDxCVvsY5i9hYMkS8"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-black/10 bg-white/70 px-5 text-sm font-medium text-ink-200 shadow-ring backdrop-blur transition hover:bg-white/85"
+                >
+                  View Reception Map
+                </a>
+              </div>
             </Reveal>
 
             <Reveal
@@ -398,7 +365,7 @@ export default function Home() {
               <SectionHeading
                 eyebrow="RSVP"
                 title="Save us a seat"
-                subtitle="Please respond by August 15, 2026. With love, thank you for being part of our story."
+                subtitle="Please respond by June 29, 2026. With love, thank you for celebrating with us."
               />
               <div className="mt-8 overflow-hidden rounded-2xl border border-black/10 bg-white/60 p-6 shadow-soft backdrop-blur">
                 <h3 className="font-display text-2xl tracking-tight">Note</h3>
@@ -425,7 +392,7 @@ export default function Home() {
             Thank you for celebrating with us.
           </p>
           <p className="mt-3 text-sm text-ink-50">
-            With love, Avery &amp; Jordan
+            With love, James Rhyll &amp; Algen Mary
           </p>
         </Container>
       </footer>
