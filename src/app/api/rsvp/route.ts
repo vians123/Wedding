@@ -141,7 +141,6 @@ export async function POST(req: Request) {
 
   const formBody = new URLSearchParams({
     [fieldName]: name.trim(),
-    [fieldEmail]: email.trim(),
     [fieldGuestName]: guestName.trim(),
     [fieldGuestContact]: guestContact.trim().replace(/[^0-9]/g, ""),
   });
