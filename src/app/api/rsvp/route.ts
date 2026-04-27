@@ -143,8 +143,7 @@ export async function POST(req: Request) {
     [fieldName]: name.trim(),
     [fieldEmail]: email.trim(),
     [fieldGuestName]: guestName.trim(),
-    [fieldGuestContact]: guestContact.trim(),
-    [fieldGuestRole]: guestRole.trim(),
+    [fieldGuestContact]: guestContact.trim().replace(/[^0-9]/g, ""),
   });
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
