@@ -203,7 +203,7 @@ export default function Home() {
             />
           </Reveal>
 
-          <div className="mt-10 grid gap-4 lg:grid-cols-3">
+          <div className="mt-10 grid gap-4 lg:grid-cols-2">
             <Reveal className="glass rounded-2xl p-6 shadow-ring transition will-change-transform hover:-translate-y-0.5 hover:shadow-soft">
               <div className="flex items-start justify-between gap-4">
                 <h3 className="font-display text-2xl tracking-tight">Ceremony</h3>
@@ -258,29 +258,6 @@ export default function Home() {
                 >
                   View Reception Map
                 </a>
-              </div>
-            </Reveal>
-
-            <Reveal
-              delay={0.12}
-              className="glass rounded-2xl p-6 shadow-ring transition will-change-transform hover:-translate-y-0.5 hover:shadow-soft"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <h3 className="font-display text-2xl tracking-tight">Map</h3>
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/70 shadow-ring backdrop-blur">
-                  <span className="text-base">📍</span>
-                </span>
-              </div>
-              <div className="mt-4 overflow-hidden rounded-xl border border-black/10 bg-beige-50">
-                <div className="flex aspect-[4/3] items-center justify-center text-center">
-                  <div className="px-6">
-                    <p className="text-sm text-ink-100">Map embed placeholder</p>
-                    <p className="mt-2 text-xs leading-6 text-ink-50">
-                      Replace with a Google Maps iframe or your favorite map
-                      provider.
-                    </p>
-                  </div>
-                </div>
               </div>
             </Reveal>
           </div>
