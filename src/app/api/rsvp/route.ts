@@ -23,6 +23,13 @@ function serverError(message: string) {
   return Response.json({ ok: false, error: message }, { status: 500 });
 }
 
+function invalidFieldIdsError() {
+  return Response.json(
+    { ok: false, error: "Invalid Google Form field IDs" },
+    { status: 500 },
+  );
+}
+
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -106,12 +113,31 @@ export async function POST(req: Request) {
     return serverError("Server is missing Google Form configuration.");
   }
 
+  if (!formAction.includes("/formResponse")) {
+    return serverError("Invalid Google Form action URL. Use /formResponse, not /viewform.");
+  }
+
+  const fieldIds = [
+    fieldName,
+    fieldEmail,
+    fieldAttendance,
+    fieldGuestName,
+    fieldGuestContact,
+    fieldGuestRole,
+    fieldExcitement,
+    fieldMessage,
+  ].filter((id): id is string => typeof id === "string" && id.length > 0);
+
+  if (fieldIds.some((id) => !id.startsWith("entry."))) {
+    return invalidFieldIdsError();
+  }
+
   const attendanceLabel =
     attendance === "yes"
-      ? "Yes, I/We will be delighted to attend."
+      ? "Yes, I'll be there"
       : attendance === "no"
-        ? "No, I/We will unfortunately be unable to attend."
-        : "Maybe, I still need to fix my schedule. I will let you know soon";
+        ? "Sorry, can't make it"
+        : "Maybe";
 
   const formBody = new URLSearchParams({
     [fieldName]: name.trim(),
@@ -122,9 +148,6 @@ export async function POST(req: Request) {
     [fieldGuestRole]: guestRole.trim(),
     [fieldExcitement]: excitement,
   });
-  // When Google Forms "Collect email addresses" is enabled,
-  // this field is often required in addition to any custom email question.
-  formBody.set("emailAddress", email.trim());
   if (fieldMessage) {
     formBody.set(fieldMessage, message.trim());
   }
@@ -141,6 +164,8 @@ export async function POST(req: Request) {
   };
 
   console.log("[RSVP] Forwarding to Google Form", payloadOut);
+  console.log("[RSVP] formAction:", formAction);
+  console.log("[RSVP] formBody:", formBody.toString());
   try {
     const res = await fetch(formAction, {
       method: "POST",
@@ -153,10 +178,12 @@ export async function POST(req: Request) {
     });
 
     const text = await res.text().catch(() => "");
+    console.log("[RSVP] Google response status:", res.status);
+    console.log("[RSVP] Google response body:", text);
     if (!res.ok && res.status !== 302) {
       console.warn("[RSVP] Google Form error", res.status, text);
       return serverError(
-        `Google Form rejected the submission (status ${res.status}). Please verify form entry IDs and required fields.`,
+        `Google Form rejected the submission (status ${res.status}). Body: ${text || "<empty>"}`,
       );
     }
   } catch (err) {
