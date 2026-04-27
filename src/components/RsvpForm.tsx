@@ -422,18 +422,7 @@ export function RsvpForm() {
 
         <div className="min-h-[24px]">
           <AnimatePresence mode="wait">
-            {status.type === "success" ? (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="text-sm text-ink-50"
-              >
-                <span className="font-medium">Thank you for your RSVP</span>{" "}
-                <span aria-hidden>💖</span>
-              </motion.div>
-            ) : status.type === "error" ? (
+            {status.type === "error" ? (
               <motion.p
                 key="error"
                 initial={{ opacity: 0, y: 8 }}
