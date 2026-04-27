@@ -134,10 +134,10 @@ export async function POST(req: Request) {
 
   const attendanceLabel =
     attendance === "yes"
-      ? "Yes, I'll be there"
+      ? "Yes, I/We will be delighted to attend."
       : attendance === "no"
-        ? "Sorry, can't make it"
-        : "Maybe";
+        ? "No, I/We will unfortunately be unable to attend."
+        : "Maybe, I still need to fix my schedule. I will let you know soon";
 
   const formBody = new URLSearchParams({
     [fieldName]: name.trim(),
