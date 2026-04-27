@@ -328,7 +328,7 @@ export default function Home() {
               <SectionHeading
                 eyebrow="RSVP"
                 title="Save us a seat"
-                subtitle="Please respond by June 29, 2026. With love, thank you for celebrating with us."
+                subtitle="Please respond by June 14, 2026. With love, thank you for celebrating with us."
               />
             </Reveal>
 
